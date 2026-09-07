@@ -1,84 +1,82 @@
-# 🔎 Laptop Search Engine
+# 🔎 LaptopSearchEngine — Flask Edition
 
-A beginner-friendly Python project that teaches you the **`os` module** by
-building a real file-search tool — no extra libraries needed.
+A full-stack file-search web app built with **Python + Flask + vanilla JS**.
+The backend uses the `os` module; the frontend talks to it via REST API calls.
 
 ---
 
-## 📁 File Structure
+## 📁 Project Structure
 
 ```
 LaptopSearchEngine/
-├── main.py       ← Run this. Shows the menu and calls scanner functions.
-├── scanner.py    ← All the os-module logic lives here (read this to learn!).
-└── README.md     ← You are here.
+│
+├── app.py              ← Flask server  (API routes)
+├── scanner.py          ← os-module logic  (unchanged from Phase 1)
+│
+├── templates/
+│   └── index.html      ← HTML page served by Flask
+│
+├── static/
+│   ├── css/style.css   ← Styling
+│   └── js/app.js       ← fetch() calls to Flask API
+│
+└── README.md
 ```
 
 ---
 
-## 🚀 How to Run
+## 🚀 Setup & Run
 
 ```bash
-python main.py
-```
+# 1. Install Flask (one-time)
+pip install flask
 
-That's it. No installs, no virtual environments — just plain Python.
+# 2. Run the server
+python app.py
 
----
-
-## 🧠 What You Learn (os module concepts)
-
-| Function | What it does |
-|---|---|
-| `os.getcwd()` | Returns the folder your script is currently running from |
-| `os.listdir(path)` | Lists all names (files + folders) inside a folder |
-| `os.path.join(a, b)` | Safely combines two path parts → no manual `/` needed |
-| `os.path.exists(path)` | Checks if a file or folder actually exists |
-| `os.path.isfile(path)` | True if the path is a file |
-| `os.path.isdir(path)` | True if the path is a folder |
-| `os.walk(root)` | Deep-crawls every sub-folder automatically |
-| `os.path.getsize(path)` | Returns file size in bytes |
-| `os.path.splitext(name)` | Splits `"file.txt"` → `("file", ".txt")` |
-| `os.path.basename(path)` | Extracts just the name from a full path |
-| `os.path.expanduser("~")` | Converts `~` to your real home directory |
-| `os.name` | `'nt'` on Windows, `'posix'` on Linux/macOS |
-| `os.sep` | Path separator: `\` on Windows, `/` on Linux/macOS |
-| `os.environ` | Dict of all environment variables (HOME, USER, PATH …) |
-
----
-
-## 🎮 Menu Options
-
-```
-[1]  📍  Where am I?            → os.getcwd()
-[2]  📂  List a folder          → os.listdir()
-[3]  🔍  Search files by name   → os.walk()
-[4]  📄  Search by extension    → os.path.splitext()
-[5]  💻  System info            → os.environ, os.name
-[0]  🚪  Exit
+# 3. Open your browser
+http://127.0.0.1:5000
 ```
 
 ---
 
-## 💡 Beginner Tips
+## 🔗 How Flask Connects Everything
 
-- **Every lesson is a function** in `scanner.py` — read the comments inside each one.
-- Start with option `[1]` and `[2]` before trying the deep search.
-- For options `[3]` and `[4]`, try your **Desktop** or **Documents** folder as the root.
-- `os.walk()` is the most powerful tool here — once you understand it, you can
-  build your own file manager, duplicate finder, or backup tool.
-
----
-
-## 🔧 Extend the Project (ideas for Phase 2)
-
-- [ ] Search files **larger than** a given size using `os.path.getsize()`
-- [ ] Sort results by size or name
-- [ ] Count total files and total size in a folder tree
-- [ ] Find **duplicate** files by comparing sizes
-- [ ] Export results to a `.txt` file using `open()`
+```
+Browser (index.html + app.js)
+    │
+    │  fetch("/api/search/name", { body: { path, keyword } })
+    ▼
+Flask (app.py)  →  calls scanner.py  →  os.walk(path)
+    │
+    │  returns JSON  { success: true, results: [...] }
+    ▼
+app.js builds HTML cards and injects them into the page
+```
 
 ---
 
-*Built with nothing but Python's built-in `os` module — proof that the
-standard library is already powerful.*
+## 🌐 API Routes
+
+| Method | Route | What it does |
+|--------|-------|--------------|
+| GET  | `/`                    | Serves the HTML frontend |
+| GET  | `/api/location`        | Returns `os.getcwd()` |
+| GET  | `/api/sysinfo`         | Returns `os.name`, `os.environ` info |
+| POST | `/api/list`            | `os.listdir()` for a given path |
+| POST | `/api/search/name`     | `os.walk()` search by keyword |
+| POST | `/api/search/extension`| `os.walk()` + `splitext()` search |
+
+---
+
+## 🧠 What You Learn
+
+- How Flask routes work (`@app.route`)
+- How to return JSON from Flask (`jsonify`)
+- How to call your own Python module from Flask
+- How the browser fetches JSON from a server (`fetch` API)
+- How to build HTML dynamically from JSON responses
+
+---
+
+*Phase 1 taught the `os` module. Phase 2 connects it to the web.*
