@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Laptop Search Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+  <!-- ── HEADER ── -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">⌕</span>
+        <span class="logo-text">LaptopSearch<span class="logo-accent">Engine</span></span>
+      </div>
+      <div class="header-meta" id="sysinfo-bar">
+        <span class="meta-pill" id="pill-os">—</span>
+        <span class="meta-pill" id="pill-user">—</span>
+        <span class="meta-pill" id="pill-cwd">—</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── MAIN ── -->
+  <main class="page-main">
+
+    <!-- ── TAB NAV ── -->
+    <nav class="tab-nav" role="tablist">
+      <button class="tab-btn active" data-tab="list"      role="tab">Browse Folder</button>
+      <button class="tab-btn"        data-tab="name"      role="tab">Search by Name</button>
+      <button class="tab-btn"        data-tab="extension" role="tab">Search by Type</button>
+      <button class="tab-btn"        data-tab="sysinfo"   role="tab">System Info</button>
+    </nav>
+
+    <!-- ──────────────────────────────────────────── -->
+    <!--  TAB 1 — Browse Folder                       -->
+    <!-- ──────────────────────────────────────────── -->
+    <section class="tab-panel active" id="tab-list">
+      <div class="panel-head">
+        <h2>Browse a Folder</h2>
+        <p>Lists every file and sub-folder one level deep — like <code>os.listdir()</code>.</p>
+      </div>
+      <div class="input-row">
+        <input class="path-input" id="list-path" type="text"
+               placeholder="Enter a folder path, e.g.  ~/Documents  or  /home/you"/>
+        <button class="btn-primary" onclick="doList()">Browse</button>
+      </div>
+      <div id="list-result" class="result-area hidden"></div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── -->
+    <!--  TAB 2 — Search by Name                      -->
+    <!-- ──────────────────────────────────────────── -->
+    <section class="tab-panel" id="tab-name">
+      <div class="panel-head">
+        <h2>Search Files by Name</h2>
+        <p>Deep-crawls every sub-folder using <code>os.walk()</code> and matches your keyword.</p>
+      </div>
+      <div class="input-row">
+        <input class="path-input" id="name-path" type="text"
+               placeholder="Root folder  e.g.  ~/Desktop"/>
+        <input class="keyword-input" id="name-keyword" type="text"
+               placeholder="Keyword  e.g.  resume"/>
+        <button class="btn-primary" onclick="doSearchName()">Search</button>
+      </div>
+      <div id="name-result" class="result-area hidden"></div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── -->
+    <!--  TAB 3 — Search by Extension                 -->
+    <!-- ──────────────────────────────────────────── -->
+    <section class="tab-panel" id="tab-extension">
+      <div class="panel-head">
+        <h2>Search Files by Type</h2>
+        <p>Finds all files with a given extension using <code>os.path.splitext()</code>.</p>
+      </div>
+      <div class="input-row">
+        <input class="path-input" id="ext-path" type="text"
+               placeholder="Root folder  e.g.  ~/Documents"/>
+        <input class="keyword-input" id="ext-keyword" type="text"
+               placeholder="Extension  e.g.  pdf  mp3  jpg"/>
+        <button class="btn-primary" onclick="doSearchExt()">Search</button>
+      </div>
+      <div id="ext-result" class="result-area hidden"></div>
+    </section>
+
+    <!-- ──────────────────────────────────────────── -->
+    <!--  TAB 4 — System Info                         -->
+    <!-- ──────────────────────────────────────────── -->
+    <section class="tab-panel" id="tab-sysinfo">
+      <div class="panel-head">
+        <h2>System Info</h2>
+        <p>Reads OS details via <code>os.name</code>, <code>os.environ</code>, and <code>os.sep</code>.</p>
+      </div>
+      <div id="sysinfo-result" class="result-area hidden"></div>
+    </section>
+
+  </main>
+
+  <!-- ── LOADING OVERLAY ── -->
+  <div class="loading-overlay hidden" id="loading">
+    <div class="spinner"></div>
+    <span>Scanning…</span>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
